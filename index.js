@@ -27,6 +27,14 @@ async function run() {
             const products = await cursor.toArray();
             res.send(products);
         })
+
+        app.get('/products/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: ObjectId(id) };
+            const products = await productCollection.findOne(query);
+            res.send(products);
+        })
+
         // POST method
         app.post('/products', async (req, res) => {
             const newProduct = req.body;
@@ -35,12 +43,32 @@ async function run() {
             res.json(result);
         })
 
+
         //DELETE API
         app.delete('/products/:id', async (req, res) => {
             const id = req.params.id;
             const query = { _id: ObjectId(id) }
             const result = await productCollection.deleteOne(query);
             res.json(result);
+        })
+
+
+        //UPDATE API
+        app.post('/products/:id', async (req, res) => {
+            const id = req.params.id;
+            const updatedUser = req.body;
+            const filter = { _id: ObjectId(id) };
+            const options = { upsert: true };
+            const updateDoc = {
+                $set: {
+                    name: updatedUser.name,
+                    description: updatedUser.description,
+                    price: updatedUser.price,
+                },
+            };
+            const result = await usersCollection.updateOne(filter, updateDoc, options)
+            console.log('updating', id)
+            res.json(result)
         })
 
 
