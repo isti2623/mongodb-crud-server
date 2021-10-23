@@ -54,7 +54,7 @@ async function run() {
 
 
         //UPDATE API
-        app.post('/products/:id', async (req, res) => {
+        app.put('/products/:id', async (req, res) => {
             const id = req.params.id;
             const updatedUser = req.body;
             const filter = { _id: ObjectId(id) };
@@ -66,9 +66,9 @@ async function run() {
                     price: updatedUser.price,
                 },
             };
-            const result = await usersCollection.updateOne(filter, updateDoc, options)
+            const result = await productCollection.updateOne(filter, updateDoc, options)
             console.log('updating', id)
-            res.json(result)
+            res.json(result);
         })
 
 
